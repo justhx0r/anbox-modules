@@ -491,14 +491,12 @@ ashmem_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
 }
 
 static struct shrinker ashmem_shrinker = {
-	.count_objects = ashmem_shrink_count,
-	.scan_objects = ashmem_shrink_scan,
-	/*
-	 * XXX (dchinner): I wish people would comment on why they need on
-	 * significant changes to the default value here
-	 */
-	.seeks = DEFAULT_SEEKS * 4,
+    .count_objects = ashmem_shrink_count,
+    .scan_objects = ashmem_shrink_scan,
+    .seeks = DEFAULT_SEEKS * 4,
+    .flags = 0, // Set any applicable flags or use 0 if none are needed
 };
+
 
 static int set_prot_mask(struct ashmem_area *asma, unsigned long prot)
 {
@@ -874,7 +872,7 @@ static int __init ashmem_init(void)
 		return ret;
 	}
 
-	register_shrinker(&ashmem_shrinker);
+	register_shrinker(&ashmem_shrinker,"ashmem");
 
 	return 0;
 }
